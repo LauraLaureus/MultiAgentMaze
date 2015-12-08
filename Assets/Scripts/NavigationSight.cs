@@ -6,6 +6,7 @@ public class NavigationSight : MonoBehaviour {
 
     List<Vector3> rays;
     Rigidbody rb;
+    QLearningMask mask;
     public float sightRadius;
     public float angularSpeed;
     public float speed;
@@ -19,12 +20,13 @@ public class NavigationSight : MonoBehaviour {
         angularSpeed = 10f;
         speed = 5f;
         rb = this.gameObject.GetComponent<Rigidbody>();
+        mask = this.gameObject.GetComponent<QLearningBrain>().getMask();
 	}
 	
 	
 	void FixedUpdate () {
         calculateRays();
-        //updateQLearningProcedure();
+        updateQLearningProcedure();
         discartShortRays();
         Vector3 resultRay = sumRays();
         resultRay = scaleRayTofitSightRadius(resultRay);
@@ -34,6 +36,24 @@ public class NavigationSight : MonoBehaviour {
         //move(resultRay);
         //resetRays();
 	}
+
+    private void updateQLearningProcedure()
+    {
+        foreach (Vector3 ray in rays) {
+            enableAllPointsTo(ray);
+        }
+    }
+
+    private void enableAllPointsTo(Vector3 ray)
+    {
+        Vector3 intRay = floatRayToIntegerRay(ray);
+
+    }
+
+    private Vector3 floatRayToIntegerRay(Vector3 ray)
+    {
+        return new Vector3((int)ray.x, (int)ray.y, (int)ray.z);
+    }
 
     public void resetRays()
     {
